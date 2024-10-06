@@ -1,0 +1,15 @@
+# игнорировать всю папку .vs (Visual Studio)
+.vs/
+
+# файлы конфигурации и метаданные
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# временные файлы билда
+bin/
+obj/
+
+# файлы публикации
+publish/
