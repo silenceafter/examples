@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Object в JS</title>
+</head>
+<body>
+
+<h1>Памятка по JavaScript</h1>
+<p id="message">Смотри консоль</p>
+
+<script>
+  const user = {
+    name: 'Анна',
+    age: 25,
+    city: 'СПб'
+  };
+  
+  //вывод
+  console.log(Object.keys(user)); // массив свойств: name, age, city
+  console.log(Object.values(user)); // массив значений : 'Анна', 25, 'СПб'
+  console.log(Object.entries(user)); // массив пар ключ-значение: ['name', 'Анна'], ['age', 25], ..
+  console.log(Object.fromEntries([['name', 'Анна'], ['age', 25], ['city', 'СПб']])); // получить объект из пар ключ-значение
+
+  //например, при использовании фильтрации
+  const filtered = Object.fromEntries(
+    Object.entries(user).filter(([key, value]) => key !== 'city')
+  );
+  console.log(filtered);
+
+  console.log(Object.assign({}, user)); // поверхностоное копирование shallow copy, вложенные объекты копируются по ссылке
+  const config = Object.freeze({ api: 'https://api.com'}); // заморозка объекта (добавление/удаление/изменение свойств недоступно)
+  
+  // запечатывает объект (добавлять/удалять нельзя, но изменять свойства можно)
+  /*Object.seal(user);
+  user.name = 'Ольга';*/
+
+  // настройка свойства
+  Object.defineProperty(user, 'id', {
+    value: 123,
+    writable: false,
+    enumerable: false,
+    configurable: false
+  });
+
+  // получить дескриптор свойства
+  console.log(Object.getOwnPropertyDescriptor(user, 'id')); // { value: .., writable: .. }
+  console.log(Object.getOwnPropertyNames(user)); // выводит все свойства, включая неперечисляемые (кроме Symbol)
+
+  // получить массив символьных ключей
+  const sym = Symbol('id');
+  const obj = { [sym]: 100 };
+  console.log(Object.getOwnPropertySymbols(obj));
+
+  // тип объекта (более надежный, чем typeof)
+  console.log(Object.prototype.toString.call([])); // [object Array]
+  console.log(Object.prototype.toString.call(new Date())); // object Date
+  console.log(Object.prototype.toString.call(/regex/)); // object RegExp
+
+
+</script>
+
+</body>
+</html>
