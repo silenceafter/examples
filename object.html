@@ -57,6 +57,58 @@
   console.log(Object.prototype.toString.call(new Date())); // object Date
   console.log(Object.prototype.toString.call(/regex/)); // object RegExp
 
+  //способы создания объекта
+  const objectFirst = { name: 'Анна' }; // литерал
+  const objectSecond = new Object(); // new
+  const objectThird = Object.create(null); // аргумент обязательный - ссылка на прототип, иначе TypeError
+
+  // обращение к свойствам
+  console.log(objectFirst.name); // точечная нотация, через точку
+  console.log(objectFirst['name']); // допускается пробел в имени свойства (['full name'])
+
+  /* ключи всегда строки или Symbol, а число будет преобразовано к строке
+     при обращении к несуществующему свойству с явным присваиванием свойство будет создано
+  */
+  objectFirst.surname = 'Петрова';
+  console.log(objectFirst);
+
+  /* вариант без задания значения не приведет к undefined, undefined нужно задать явно */
+  objectFirst.phone = undefined;
+  console.log(objectFirst);
+
+  //удаление свойства
+  delete objectFirst.phone;
+  console.log(objectFirst);
+
+  /* функция = метод объекта */
+  let functionSample = {
+    sayHi() {
+      console.log('Привет из метода!');
+    }
+  };
+  functionSample.sayHi();
+
+  /* this = ссылка на текущий объект */
+  let thisSample = {
+    name: 'Анна',
+    greet() {
+      console.log(`Привет, я ${this.name}`);
+    }
+  };
+  thisSample.greet();
+
+  /* for in для перебора свойств */
+  for(let key in objectFirst) {
+    console.log(key, objectFirst[key]);
+  }
+
+  /* объекты передаются по ссылке. изменение копии приведет к изменению оригинала */
+  let copyFirst = { ...objectFirst }; // копирование через спред-оператор
+  let copySecond = Object.assign({}, objectFirst); // старый способ
+
+  /* глубокое копирование через JSON.parse */
+  console.log(JSON.parse(JSON.stringify(objectFirst)));
+
 
 </script>
 
