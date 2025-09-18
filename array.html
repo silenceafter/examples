@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Object в JS</title>
+</head>
+<body>
+<h1>Памятка по массивам в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>
+  /* массив - подвид объекта в JS */
+  /* массив может содержать в том числе и функции */
+  "use strict";
+  let arrayWithFunction = [
+    function() {
+      console.log('функция!');
+    },
+    () => console.log('стрелочная функция')
+  ];
+  console.log(arrayWithFunction);
+
+  let nums = new Array(1, 2, 3); // другой вариант создания массива
+  console.log(nums[99]); // если элемент не существует, то выдаст undefined
+
+  console.log(nums.push(4)); // добавит в конец 1, 2, 3, 4 
+  console.log(nums.unshift(0)); // добавит в начало 0, 1, 2, 3, 4
+  console.log(nums.pop()); // удаляет и возвращает последний элемент
+  console.log(nums.shift()); // удаляет и возвращает первый элемент
+
+  // поиск
+  console.log(nums.indexOf(2)); // индекс первого совпадения или -1
+  console.log(nums.includes(2)); // есть элемент? true/false
+  console.log(nums.find(x => x === 2)); // первый элемент подходящий под условие, можно использовать обычную анонимную ф-ию, стрелочную и именованную
+
+  // фильтрация и преобразование
+  console.log(nums.filter(x => x % 2 === 0)); // возвращает новый массив с элементами, прошедшими проверку
+  console.log(nums.map(x => x * 2)); // преобразует каждый элемент и возвращает новый массив
+  console.log([[1, 2], [3, 4]].flatMap(x => x.map(n => n * 2))); // выполнение flat и map вместе, массивы объединены в один плоский массив
+
+  // перебор
+  for(let i = 0; i < nums.length; i++) { // обычный вариант с итератором
+    console.log(nums[i]);
+  }
+
+  for(let num of nums) { // короткий вариант for of
+    console.log(num);
+  }
+
+  nums.forEach((num) => { // forEach
+    console.log(num);
+  });
+
+  // сортировка и обратный порядок
+  console.log([3, 1, 4].sort()); // по умолчанию преобразует в строки и сравнивает по алфавиту
+  console.log([10, 2, 15].sort()); // получится '10', '15', '2'
+  console.log([10, 2, 15].sort((a, b) => a - b)); // корректнее так 2, 10, 15 
+  /* a - b <= 0 элементы не меняются, a раньше b
+     a - b > 0 элементы меняются местами, b раньше a
+  */
+
+  console.log(['2', 1, '15'].sort((a, b) => Number(a) - Number(b))); // нужно привести к числу
+  /* остальные типы данных будут так же приводится к строке - 'false', 'NaN' и т.д. */
+
+  console.log(nums.reverse()); // reverse изменяет исходный массив!
+
+  // объединение и разбиение
+  console.log([1, 2, 3].concat([4, 5, 6])); // объединение массивов, пустой массив будет проигнорирован
+
+  //копирование
+  console.log([1, 2, 3, 4, 5].slice(1, 3)); // копирование элементов включая первый, исключая третий
+  console.log([1, 2, 3, 4, 5].slice(-2)); // копирование с конца двух элементов
+  console.log(nums.slice()); // полная копия всего массива
+  console.log('Hello World!'.slice(6)); // копия с 6-го символа и до конца строки
+
+  //удаление
+  const numbers = [1, 2, 3, 4, 5];
+  const removedElements = numbers.splice(1, 2);
+  console.log(removedElements); //удаление элементов с индекса 1, изменяет исходный массив
+  console.log(numbers);
+  /* удалит 2, 3
+     останется 1, 4, 5
+  */
+
+  //замена
+  console.log(numbers.splice(1, 2, 7, 8)); // в исходном останется 4, 5
+  console.log(numbers); // 1, 7, 8
+
+  //добавление
+  console.log(numbers.splice(1, 0, 10, 15));
+  console.log(numbers); // 1, 10, 15, 7, 8
+
+  //преобразование массива с строку
+  const fruits = ['яблоко', 'банан', 'виноград'];
+  const fruitList = fruits.join('-'); //можно использовать свой разделитель
+  console.log(fruitList);
+  
+  const mixedArray = [1, 'два', true, NaN];
+  console.log(mixedArray.join()); // "1,два,true,NaN" // с null и undefined не отображает
+
+/* массивы передаются по ссылке */
+Array.isArray([1, 2]); // проверка на массив
+
+/*arguments - специальный объект, псевдомассив, доступный внутри каждой функции, который хранит
+  список аргументов, переданных в функцию при вызове. поддерживает доступ к элементу [i], не имеет
+  map, filter, push - для этого должен быть преобразован в обычный массив через Array.from() или спред  */
+
+  function logArguments() {
+    const argsAsArray = Array.from(arguments);
+    console.log(argsAsArray); // Вернется массив с аргументами
+  }
+  logArguments('one', 'two'); // ['one', 'two']
+
+  function sumAll(...nums) {
+    return nums.reduce((acc, curr) => acc + curr, 0);
+  }
+  sumAll(1, 2, 3); // 6
+</script>
+</body>
+</html>
