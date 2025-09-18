@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сеть в JS</title>
+</head>
+<body>
+<h1>Памятка по работе с сетью в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>  
+  "use strict";
+  /* промис - объект, предназначенный для работы с асинхронными операциями. контейнер, который отслеживает завершение
+     асинхронной операции и удерживает результат выполнения операции. 
+     промис имеет 3 состояния:
+     1. pending (ожидание) - промис ожидает завершения операции
+     2. resolved/fulfilled (выполнен, успешно) - операция завершилась успешно, промис разрешен с некоторым значением
+     3. rejected (отклонен) - операция завершилась неудачно, промис отклонен с причиной (ошибка)
+
+     метод (объекта промис) .then() при fulfilled
+     метод .catch() при rejected
+
+     цепочка промисов
+     .then(response => response.json()) then возвращает новый промис
+     .then(data => console.log(data))
+     .catch(error => console.error(error))
+  */
+
+  // fetch api
+  fetch('https://jsonplaceholder.typicode.com/posts/1')
+    .then(response => response.json())
+    .then(data => console.log(data));
+
+  // XMLHttpRequest
+  /* класс для осуществления HTTP-запросов к серверу и получения данных синхронно/асинхронно */
+  // GET
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1', true); // true = асинхронный запрос
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      const response = JSON.parse(xhr.responseText);
+      console.log(response);
+    } else if (xhr.readyState === 4 && xhr.status !== 200) {
+      console.error(xhr.statusText);
+    }
+  };
+  xhr.send();
+
+  // POST
+  const xhrPost = new XMLHttpRequest();
+  xhrPost.open('POST', 'https://jsonplaceholder.typicode.com/posts', true);
+  xhrPost.setRequestHeader('Content-Type', 'application/json');
+  xhrPost.onreadystatechange = function() {
+    if (xhrPost.readyState === 4 && xhrPost.status === 201) {
+      const response = JSON.parse(xhrPost.responseText);
+      console.log(response);
+    } else if (xhrPost.readyState === 4 && xhrPost.status !== 201) {
+      console.error('Ошибка:', xhrPost.statusText);
+    }
+  };
+  const body = JSON.stringify({ title: 'Новый пост', body: 'Контент поста', userId: 1 });
+  xhrPost.send(body);
+
+</script>
+</body>
+</html>
