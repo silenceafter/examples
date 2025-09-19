@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Метод reduce() в JS</title>
+</head>
+<body>
+<h1>Памятка по работе с reduce() в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>  
+  "use strict";
+  /*
+  ф-ия предназначена для агрегирования данных из массива в один результат
+  задача - свести коллекцию элементов к единственному значению (сумме, максимальному числу и т.д.)
+
+  аргументы: 
+  ф-ия-колбек - вызывается для каждого элемента массива,
+  аккумулятор - накапливает результат по мере прохождения по массиву,
+  начальное значение (необязательно) - если не указано, аккумулятор становится первый элемент массива
+  */
+
+  let numbers = [1, 2, 3, 4, 5];
+  const sum = numbers.reduce((acc, cur) => acc + cur, 0);
+  console.log(sum); // 15
+
+  // максимальное число в массиве
+  numbers = [10, 20, 5, 15];
+  const maxNumber = numbers.reduce((max, cur) => (cur > max ? cur : max), numbers[0]);
+  console.log(maxNumber); // 20
+
+  // произведение элементов массива
+  numbers = [1, 2, 3, 4, 5];
+  const product = numbers.reduce((acc, cur) => acc * cur, 1);
+  console.log(product); // 120
+
+  // группировка объектов по ключу
+  const people = [
+    { name: 'Иван', gender: 'male' },
+    { name: 'Анна', gender: 'female' },
+    { name: 'Алексей', gender: 'male' },
+    { name: 'Дарья', gender: 'female' }
+  ];
+
+  const groupedByGender = people.reduce((groups, person) => {
+    const key = person.gender;
+    groups[key] = groups[key] || []; // Если группа не создана, создаём её
+    groups[key].push(person);
+    return groups;
+  }, {});
+  console.log(groupedByGender);
+  /*
+  {
+    male: [
+      { name: 'Иван', gender: 'male' },
+      { name: 'Алексей', gender: 'male' }
+    ],
+    female: [
+      { name: 'Анна', gender: 'female' },
+      { name: 'Дарья', gender: 'female' }
+    ]
+  }
+  */
+
+  // преобразование массива в объект
+  const pairs = [['name', 'Иван'], ['age', 30], ['city', 'Москва']];
+  const objFromPairs = pairs.reduce((obj, pair) => {
+    obj[pair[0]] = pair[1];
+    return obj;
+  }, {});
+  console.log(objFromPairs); // { name: 'Иван', age: 30, city: 'Москва' }
+
+  // поиска уникального массива
+  numbers = [1, 2, 3, 2, 1, 4, 5, 3];
+  const uniqueNumbers = numbers.reduce((unique, num) => {
+    if (!unique.includes(num)) {
+      unique.push(num);
+    }
+    return unique;
+  }, []);
+  console.log(uniqueNumbers); // [1, 2, 3, 4, 5]
+
+  // перевод массива строк в предложение
+  const words = ['Привет,', 'мир!', 'Сегодня', 'хороший', 'день.'];
+  const sentence = words.reduce((acc, word) => acc + ' ' + word);
+  console.log(sentence.trim()); // "Привет, мир! Сегодня хороший день."  
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Классы в JS</title>
+</head>
+<body>
+<h1>Памятка по работе с классами в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>  
+  "use strict";
+  /*
+  
+  */
+
+  class User {
+    constructor(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+
+    greet() {
+      console.log(`Привет, я ${this.name}`);
+    }
+  }
+
+  const user = new User("Аня", 25);
+  user.greet(); // Привет, я Аня
+
+  class Admin extends User {
+    constructor(name, age, role) {
+      super(name, age); // вызываем родительский конструктор
+      this.role = role;
+    }
+
+    removeUser() {
+      console.log("Удаляю пользователя...");
+    }
+  }
+
+  const admin = new Admin("Борис", 30, "moderator");
+  admin.greet();       // Привет, я Борис
+  admin.removeUser();  // Удаляю пользователя...
+
+  // статический метод
+  /* есть статические поля, но статических классов нет, их поведение можно реализовать самостоятельно */
+  class MathUtils {
+    static add(a, b) {
+      return a + b;
+    }
+  }
+
+  console.log(MathUtils.add(2, 3)); // 5
+
+  // приватные поля (современный подход)
+  class BankAccount {
+    #balance = 0; // приватное поле (новый синтаксис)
+
+    deposit(amount) {
+      this.#balance += amount;
+    }
+
+    getBalance() {
+      return this.#balance;
+    }
+  }
+
+  const acc = new BankAccount();
+  acc.deposit(100);
+  console.log(acc.getBalance()); // 100
+  // acc.#balance — ошибка! нельзя напрямую
+
+  /* super() обязательно нужно вызвать внутри конструктора дочернего класса при наследовании */
+  class Animal {
+    constructor(name) {
+      this.name = name;
+    }
+  }
+
+  class Dog extends Animal {
+    constructor(name, breed) {
+      // ОШИБКА: забыли super()
+      this.breed = breed; // ReferenceError!
+    }
+  }
+
+  let dog = new Dog("Бобик", "овчарка");
+
+  /* если у дочернего класса нет явного конструктора, то вызов super() произойдет автоматически (помним про extends) */
+  class Animal {
+    constructor(name) {
+      this.name = name;
+    }
+  }
+
+  class Dog extends Animal {
+    // Нет constructor → автоматически вызывается super(...args)
+  }
+
+  dog = new Dog("Шарик"); // Работает
+
+  /* вызов родительского метода */
+  class Animal {
+    speak() {
+      console.log("Животное издаёт звук");
+    }
+  }
+
+  class Dog extends Animal {
+    speak() {
+      super.speak();                    // Вызов родительского метода
+      console.log("Собака лает: Гав!"); // Дополнительное поведение
+    }
+  }
+
+  dog = new Dog();
+  dog.speak();
+  // Животное издаёт звук
+  // Собака лает: Гав!
+</script>
+</body>
+</html>

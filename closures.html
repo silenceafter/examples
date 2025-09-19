@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Замыкания в JS</title>
+</head>
+<body>
+<h1>Памятка по работе с замыканиями в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>  
+  "use strict";
+  /*
+  замыкание - функция, которая запоминает свое лексическое окружение, даже когда вызывается вне его
+  или
+  функция имеет доступ к переменным из внешней функции даже после того, как та завершилась
+  функция в JS всегда имеет скрытое свойство Environment, которое ссылается на лексическое окружение, в котором она была создана
+  */
+
+  function createMultiplier(x) {
+    return function(y) {
+      return x * y;
+    };
+  }
+
+  const double = createMultiplier(2);
+  const triple = createMultiplier(3);
+
+  console.log(double(5)); // 10
+  console.log(triple(5)); // 15
+
+  /* скрыть переменную от внешнего доступа, инкапсуляция */
+  function createCounter() {
+    let count = 0; // приватная переменная
+
+    return function() {
+      count++;
+      console.log(count);
+    };
+  }
+
+  const counter = createCounter();
+  counter(); // 1
+  counter(); // 2
+  counter(); // 3
+
+  // Никак не достучаться до `count` извне!
+
+  /* модуль с публичными и приватными методами */
+  //IIFE (Immediately Invoked Function Expression) + замыкание = простой модуль
+  const CounterModule = (function() {
+    let privateCount = 0;
+
+    function privateLog() {
+      console.log("Текущее значение:", privateCount);
+    }
+
+    return {
+      increment() {
+        privateCount++;
+        privateLog();
+      },
+      decrement() {
+        privateCount--;
+        privateLog();
+      },
+      getValue() {
+        return privateCount;
+      }
+      // privateCount недоступен напрямую
+    };
+  })();
+
+  CounterModule.increment(); // Текущее значение: 1
+  CounterModule.increment(); // Текущее значение: 2
+  console.log(CounterModule.getValue()); // 2
+  // privateCount и privateLog — приватны!
+
+  /* 
+  карринг currying - техника, при которой функция с несколькими аргументами преобразуется в последовательность
+  функций, каждая из которых принимает по одному аргументу
+  */
+  function add(a) {
+    return function(b) {
+      return a + b;
+    };
+  }
+
+  const add5 = add(5);     // замкнуло a = 5
+  console.log(add5(3));    // 8
+  console.log(add(2)(7));  // 9
+</script>
+</body>
+</html>

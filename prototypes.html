@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Прототипы в JS</title>
+</head>
+<body>
+<h1>Памятка по работе с прототипами в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>  
+  "use strict";
+  /*
+  прототипы лежат в основе всей объектной модели JS
+  прототип - внутренний объект, связанный с каждым объектом 
+  при поиске свойства или метода JS смотрит сам объект, если не находит, то смотрит прототип (цепочка прототипов, где вершина - Object.prototype)
+  объект А -> прототип объекта А -> прототип прототипа объекта А -> ... -> Object.prototype -> null
+
+  новый объект наследует свойства и метода своего прототипа
+  например, можно добавить свой метод в прототип:
+  */
+
+  function Person(name) {
+    this.name = name;
+  }
+    
+  // Добавляем метод в прототип
+  Person.prototype.sayHi = function() {
+    console.log(`Привет, меня зовут ${this.name}.`);
+  };
+
+  /*
+  добавленные в прототип свойства/методы будут доступны всем экземплярам класса
+  прототипы нужны для наследования, оптимизации памяти (размещение методов в прототипе уменьшает затраты памяти на хранение данных) и общего поведения
+  __proto__ - особое свойство, доступное у каждого объекта, которое ссылается на прототип
+  с ES6 лучше использовать Object.getPrptotypeOf() и Object.setPrototypeOf() вместо __proto__
+  proto не является частью ECMAScript
+  */
+
+  const parentProto = { color: 'green' };
+  const child = {};
+
+  // установить прототип
+  Object.setPrototypeOf(child, parentProto);
+  console.log(child.color); // green
+
+  // можно установить через Object.create()
+  const customObj = Object.create(parentProto);
+  console.log(customObj.color);
+
+  /*
+  можно установить и через __proto__, но это нерекомендуемый и небезопасный способ 
+  (плохая совместимость с babel, webpack), проблемы с производительностью в старых версиях браузеров,
+  официально применяется setPrototypeOf, getPrototypeOf
+  */
+  const customObjProto = {};
+  customObjProto.__proto__ = parentProto;
+  console.log(customObjProto.color);
+
+  // получить прототип
+  console.log(Object.getPrototypeOf(child) === parentProto);
+
+  /* 
+  null в качестве прототипа изолирует объект от Object.prototype, toString(), hasOwnProperty() будет недоступны 
+  undefined в прототипе приведет к ошибке TypeError
+  прототипом может быть только объект или null, все остальное = ошибка
+  */
+  
+</script>
+</body>
+</html>
