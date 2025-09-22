@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>События в JS</title>
+</head>
+<body>
+<h1>Памятка по событиям в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>
+  /*
+    при наступлении события - клик по кнопке запускается механизм распространения события по DOM-дереву
+    3 фазы:
+    1. capturing phase (перехват событий)
+    распространяется от корня к цели
+    window -> document -> html -> body -> ... -> целевой элемент
+    при capture: true событие будет перехвачено
+
+    document.getElementById('grandparent').addEventListener('click', () => {
+      console.log('Capturing: Grandparent');
+    }, { capture: true });
+
+    document.getElementById('parent').addEventListener('click', () => {
+      console.log('Capturing: Parent');
+    }, { capture: true });
+
+    при клике на child:
+    Capturing: Grandparent
+    Capturing: Parent
+
+    2. target phase (целевая фаза) - на самом элементе
+    событие достигло элемента, на котором произошло (event.target)
+    срабатывают все обработчики, повешенные на целевой элемент, независимо от capture: true
+
+    document.getElementById('child').addEventListener('click', () => {
+      console.log('Target: Child (capturing)');
+    }, { capture: true });
+
+    document.getElementById('child').addEventListener('click', () => {
+      console.log('Target: Child (bubbling)');
+    });
+
+    Оба обработчика сработают в порядке добавления:
+    Target: Child (capturing)
+    Target: Child (bubbling)
+
+    Внутри целевого элемента фаза capturing/bubbling не имеет значения — обработчики выполняются в порядке регистрации.
+
+    3. bubbling phase (фаза всплытия) - от цели к корню
+    распространяется от цели к корню
+    целевой элемент -> родитель -> ... -> window
+    событие всплывает вверх по DOM-дереву. это поведение по умолчанию, обработчики без capture: true срабатывают именно здесь
+
+    document.getElementById('parent').addEventListener('click', () => {
+      console.log('Bubbling: Parent');
+    });
+
+    document.getElementById('grandparent').addEventListener('click', () => {
+      console.log('Bubbling: Grandparent');
+    });
+
+    После целевой фазы выведет:
+    Bubbling: Parent
+    Bubbling: Grandparent
+
+    для определения текущей фазы есть event.eventPhase: 
+    1 - capturing phase - Event.CAPTURING_PHASE
+    2 - target phase - Event.AT_TARGET
+    3 - bubbling phase - Event.BUBBLING_PHASE
+    
+    event.target - элемент, на котором произошло событие (не меняется)
+    event.currentTarget - элемент, на котором сработал обработчик (может меняться при всплытии)
+    event.stopPropagation() - останавливает дальнейшее распространение события
+    event.stopImmediatePropagation() - останавливает распространение + другие обработчики на этом элементе
+
+    обработчики выполняются в порядке добавления, независимо от capture: true
+    на целевом элементе нет разницы между capturing и bubbling - все обработчики на event.target выполняются в фазе AT_TARGET
+    если событие не всплывает, то фаза bubbling не запускается
+    события focus, blur, load, unload, scroll не всплывают - у них нет фазы 3 bubbling
+    проверить всплывает ли событие можно через e.bubbles
+
+    focus - фокус при tab или программно
+    blur - элемент теряет фокус
+    работает только на фокусируемых элементах: input, textarea, select, button и любом элементе с tabindex = 0 или tabindex = -1
+    для делегирования использовать focusin/focusout
+
+    load - ресурс полностью загружен
+    для img, script событие всплывает
+    для window всплытие не имеет смысла, это корень
+    срабатывает при кэшировании, если браузер считает, что ресурс загружен
+    когда нужно дождаться всех ресурсов или динамической загрузки изображений/скриптов
+
+    unload - пользователь покидает страницу (закрытие вкладки, переход по ссылке, обновление страницы, закрытие браузера)
+    браузер может прервать выполнение
+    нельзя показать alert, confirm, prompt - браузеры их игнорируют
+    асинхронные операциимогут не успеть выполниться
+    смотри beforeunload
+
+    scroll - прокрутка элемента/окна
+    используется в window или элементе с overflow: scroll/auto
+    может срабатывать часто - требуется оптимизация через throttle или requestAnimationFrame
+    можно использовать делегирование вручную, отслеживая target
+
+
+  */
+
+  document.getElementById('parent').addEventListener('click', function(e) {
+    console.log('target:', e.target.id); // тот, по кому кликнули
+    console.log('currentTarget:', e.currentTarget.id); // тот, на ком висит обработчик
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM в JS</title>
+</head>
+<body>
+<h1>Памятка по DOM в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>
+  /*
+  DOM - Document Object Model, объектная модель документа, интерфейс программирования (API), который позволяет JS взаимодействовать с HTML-документом
+  HTML-документ - дерево объектов, где каждый элемент - узел (node)
+  <html> - корневой элемент
+  у каждого элемента есть родители, дети и соседи
+
+  поиск элементов:
+  1) document.getElementById(id) - возвращает один элемент, если ничего найдено = null
+  2) getElementsByClassName('myclass') - возвращает HTMLCollection - коллекцию, похожую на массив, но не поддерж. map, filter и т.д.
+  ее можно преобразовать через Array.from()
+  коллекция автоматически меняется при изменении DOM
+  если ничего не найдено, то пустая коллекция
+  3) getElementsByTagName('mytag') - возвращает HTMLCollection
+  4) querySelector() - возвращает первый соответствующий элемент или null, позволяет искать класс через точку = '.myclass' или id = '#myid'
+  5) querySelectorAll() - возвращает NodeList, можно еще искать через 'p.highlight' (тег и класс), 'input[type="email"]' (атрибуты)
+
+  element.textContent = '';
+  element.innetHTML = ''; //HTML, но опасно для XSS
+
+  element.setAttribute
+  element.getAttribute
+  element.hasAttribute
+  element.removeAttribute
+
+  element.classList.add('myclass')/remove/toggle/contains
+
+  document.createElement('div')
+  document.body.appendChild()
+
+  element.addEventListener('click', function(event) {
+    console.log('Клик');
+  });
+  element.removeEventListener('click', handlerFunction);
+
+  DOMContentLoaded - html загружен и dom построен - запуск js, который работает с dom
+  window.onload - загружены все ресурсы (картинки, стили) - если нужно дождаться картинок
+  */
+</script>
+</body>
+</html>
