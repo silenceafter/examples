@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Колбэки в JS</title>
+</head>
+<body>
+<h1>Памятка по колбэкам в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>
+  /*
+    Колбэк - функция, которую передаешь другой функции, чтобы потом ее вызвать (когда произойдет событие, закончится таймер, придут данные и т.д.)
+    используется в addEventListener, setTimeout, forEach, других асинхронных операциях
+  */
+
+  setTimeout(function() {
+    console.log('Прошла секунда!');
+  }, 1000);
+
+  [1, 2, 3].forEach(function(item) {
+    console.log(item);
+  });
+
+    /*
+    callback hell - ситуация,  когда текст программы превращается в глубоко вложенные колбэки, которые сложно читать, поддерживать и отлаживать.
+    много уровней вложенности, отступы
+
+    Сложно читать — глаза разбегаются по отступам.
+    Сложно поддерживать — добавить шаг? Придётся вставлять ещё один уровень вложенности.
+    Сложно обрабатывать ошибки — нужно дублировать if (err) ... на каждом уровне.
+    Нет контроля потока — сложно сделать параллельные запросы или повторные попытки.
+    Не масштабируется — чем больше логики, тем страшнее код.
+    */
+
+    getUser(1, function(user) {
+      getPosts(user.id, function(posts) {
+        getComments(posts[0].id, function(comments) {
+          console.log('Пользователь:', user.name);
+          console.log('Пост:', posts[0].title);
+          console.log('Комментарии:', comments);
+        });
+      });
+    });
+
+    //лучше использовать промисы или async/await
+    getUser(1)
+      .then(user => getPosts(user.id))
+      .then(posts => getComments(posts[0].id))
+      .then(comments => {
+        console.log('Комментарии:', comments);
+      })
+      .catch(err => {
+        console.error('Ошибка:', err);
+      });
+
+    async function loadUserData() {
+      try {
+        const user = await getUser(1);
+        const posts = await getPosts(user.id);
+        const comments = await getComments(posts[0].id);
+
+        console.log('Пользователь:', user.name);
+        console.log('Пост:', posts[0].title);
+        console.log('Комментарии:', comments);
+      } catch (err) {
+        console.error('Ошибка:', err);
+      }
+    }
+
+    loadUserData();
+</script>
+</body>
+</html>

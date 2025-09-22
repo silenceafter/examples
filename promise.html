@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Промисы в JS</title>
+</head>
+<body>
+<h1>Памятка по работе с промисами в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>  
+  "use strict";
+  /*
+  промис - объект, представляющий результат асинхронной операции, т.е. обещание вернуть результат в будущем.
+  может быть в 3 состояниях
+  pending - в ожидании, начальное состояние
+  fulfilled - выполнен успешно, операция завершена успешно
+  rejected - отклонен, операция завершена с ошибкой
+  */
+
+  const myPromise = new Promise((resolve, reject) => {
+    // Имитируем асинхронную операцию
+    setTimeout(() => {
+      const success = true;
+      if (success) {
+        resolve("Успех!"); // → fulfilled
+      } else {
+        reject("Ошибка!"); // → rejected
+      }
+    }, 1000);
+  });
+
+  myPromise
+  .then(result => {
+    console.log(result); // "Успех!"
+  })
+  .catch(error => {
+    console.error(error); // "Ошибка!"
+  });
+
+  /*
+  .then() обрабатывает успешный результат, возвращает новый промис
+  .catch() ловит ошибку, если промис отклонен
+  .finally() выполняется в любом случае
+  
+  catch будет обрабатывать ошибку в любом из блоков then
+  */
+
+  fetchUser(1)
+    .then(user => fetchPosts(user.id))
+    .then(posts => fetchComments(posts[0].id))
+    .then(comments => console.log(comments))
+    .catch(err => console.error("Ошибка:", err));
+
+  Promise.resolve()
+    .then(() => { throw new Error("Ой!"); })
+    .then(() => console.log("Это не выполнится"))
+    .catch(err => console.error(err.message)); // "Ой!"
+
+  /*
+  Promise.resolve('')
+  Promise.reject('')
+  Promise.all([]) - ждет выполнения всех промисов, перестанет выполняться, если хоть один промис отклонится
+  Promise.allSettled([]) - ждет выполнения и не падает, вернет массив со статусами status: 'fulfilled', reason: ..
+  Promise.race([]) - вернет результат первого завершившегося промиса (успех или ошибка не имеет значения)
+  Promise.any([]) - ждет первый успешно завершившийся промис. Если все упали, то AggregateError (ES2021)
+
+  промисы это основа для async/await, которые синтаксический сахар над промисами
+  */
+
+  
+  
+</script>
+</body>
+</html>
