@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Loop в JS</title>
+</head>
+<body>
+<h1>Памятка по Event Loop в JavaScript</h1>
+<p id="message">Смотри консоль</p>
+<script>
+  /*
+  Event Loop + Call Stack + Callback Queue + Web APIs
+  1. Call Stack (стек вызовов)
+  место, где выполняются функции
+  принцип LIFO
+  при переполнении стека Maximum call stack size exceeded
+
+  2. Web APIs (браузер или Node.js)
+  внешние среды, которые не являются частью JS, но предоставляющие функции:
+  setTimeout, fetch, DOM events, Promise и т.д.
+  выполняются асинхронно, не блокируют Call Stack
+
+  3. Callback Queue (очередь задач)
+  сюда попадают колбэки из Web APIs, когда они готовы
+  принцип FIFO
+
+  4. Event Loop (цикл событий)
+  надзиратель, который проверяет:
+  - пуст ли Call Stack -> если да, то берет первую задачу из Callback Queue
+
+  Event Loop различает 2 вида задач:
+  1. Макротаски (macrotasks), очередь задач (Task Queue) - setTimeout, setInterval, I/O
+  */
+</script>
+</body>
+</html>
