@@ -30,6 +30,25 @@
 
   Event Loop различает 2 вида задач:
   1. Макротаски (macrotasks), очередь задач (Task Queue) - setTimeout, setInterval, I/O
+  2. Микротаски (microtasks), очередь микрозадач - Promise.then/catch.finally, queueMicrotask, MutationObserver
+
+  после каждого завершения синхронного кода (или макротаска) event loop сначала выполняет все микротаски, затем переходит к следующему макротаску
+  */
+
+  console.log('1'); // 1 - синхронный код
+  setTimeout(() => console.log('2'), 0); // 4 - макротаск
+  Promise.resolve().then(() => console('3')); // 3 - микротаск
+  console.log('4'); // 2 - синхронный код
+
+  /*
+  while (true) {
+    // бесконечный цикл блокирует call stack навсегда, event loop не может вмешаться
+  }
+
+  т.е.
+  1. Синхронный код выполняется первым
+  2. Микротаски (промисы) выполняются сразу после синхронного кода
+  3. Макротаски (setTimeout) выполняются позже, по одному за "тик" event loop
   */
 </script>
 </body>
